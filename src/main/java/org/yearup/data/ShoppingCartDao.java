@@ -11,7 +11,6 @@ public interface ShoppingCartDao
 {
     ShoppingCart getByUserId(int userId);
     // add additional method signatures here
-    List<ShoppingCartItem> getAllItems();
     ShoppingCartItem create(Product product);
     void update(int userId, Product product);
     void delete(int userId);

@@ -23,35 +23,34 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
-    public List<ShoppingCartItem> getAllItems() {
-
-        List<ShoppingCartItem> shoppingCartItems = new ArrayList<>();
-
+    public ShoppingCart getByUserId(int userId) {
+//        // get shopping cart by user id
 //        String query = """
-//                SELECT *
-//                FROM shopping_cart""";
+//                select
+//                product_id,
+//                quantity
+//                from
+//                shopping_cart
+//                where user_id = ?
+//                """;
 //
-//        try(Connection connection = getConnection();
-//            PreparedStatement ps = connection.prepareStatement(query);
-//            ResultSet resultSet = ps.executeQuery()
+//        try(
+//                Connection connection = getConnection();
+//                PreparedStatement ps = connection.prepareStatement(query);
 //        ) {
-//
-//            while(resultSet.next()) {
-//                int userId = resultSet.getInt(1);
-//                int productId = resultSet.getInt(2);
-//                int quantity = resultSet.getInt(3);
-//                ShoppingCartItem sci = new ShoppingCartItem();
+//            ps.setInt(1, userId);
+//            try(ResultSet resultSet = ps.executeQuery()) {
+//                while (resultSet.next()){
+//                    int productId = resultSet.getInt(2);
+//                    int quantity = resultSet.getInt(3);
+//                    ShoppingCart shoppingCart = new Category(userId, productId, quantity);
+//                    return shoppingCart;
+//                }
 //            }
 //
 //        } catch (SQLException e) {
 //            throw new RuntimeException(e);
 //        }
-
-        return shoppingCartItems;
-    }
-
-    @Override
-    public ShoppingCart getByUserId(int userId) {
         return null;
     }
 
@@ -67,7 +66,22 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
 
     @Override
     public void delete(int userId) {
+        // delete shopping cart
+        String query = """
+                DELETE FROM shopping_cart
+                WHERE user_id = ?""";
 
+        try (Connection connection = getConnection())
+        {
+            PreparedStatement statement = connection.prepareStatement(query);
+            statement.setInt(1, userId);
+
+            statement.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     // work in progress

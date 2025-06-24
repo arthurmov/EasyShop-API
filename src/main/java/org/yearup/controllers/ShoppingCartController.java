@@ -28,7 +28,7 @@ public class ShoppingCartController
 
 
     @GetMapping
-    @PreAuthorize("permitAll()")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     // each method in this controller requires a Principal object as a parameter
     public ShoppingCart getCart(Principal principal)
     {
@@ -41,7 +41,7 @@ public class ShoppingCartController
             int userId = user.getId();
 
             // use the shoppingcartDao to get all items in the cart and return the cart
-            return null;
+            return shoppingCartDao.getByUserId(userId);
         }
         catch(Exception e)
         {
@@ -53,10 +53,16 @@ public class ShoppingCartController
     // https://localhost:8080/cart/products/15 (15 is the productId to be added
     @PostMapping("products/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ShoppingCartItem addProductToCart(@RequestBody Product product) {
+    public ShoppingCartItem addProductToCart(@RequestBody Product product, Principal principal) {
 
         try
         {
+            // get the currently logged-in username
+            String userName = principal.getName();
+            // find database user by userId
+            User user = userDao.getByUserName(userName);
+            int userId = user.getId();
+
             return shoppingCartDao.create(product);
         }
         catch(Exception ex)
@@ -71,10 +77,16 @@ public class ShoppingCartController
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated
     @PutMapping("products/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void updateShoppingCart(@PathVariable int userId, Product product){
+    public void updateShoppingCart(@PathVariable Product product, Principal principal){
     // update the shopping cart by id
     try
     {
+        // get the currently logged-in username
+        String userName = principal.getName();
+        // find database user by userId
+        User user = userDao.getByUserName(userName);
+        int userId = user.getId();
+
         shoppingCartDao.update(userId, product);
     }
     catch(Exception ex)
@@ -88,11 +100,17 @@ public class ShoppingCartController
     // https://localhost:8080/cart
     @DeleteMapping
     @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public void deleteShoppingCart(@PathVariable int userId)
+    public void deleteShoppingCart(Principal principal)
     {
         // delete the shopping cart by user id
         try
         {
+            // get the currently logged-in username
+            String userName = principal.getName();
+            // find database user by userId
+            User user = userDao.getByUserName(userName);
+            int userId = user.getId();
+
             var category = shoppingCartDao.getByUserId(userId);
 
             if(category == null)

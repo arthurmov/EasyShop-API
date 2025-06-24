@@ -57,11 +57,12 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
         // get category by id
         String query = """
                 select
-                categoryId,
-                categoryName
+                category_Id,
+                Name,
+                description
                 from
                 categories
-                where categoryId = ?
+                where category_Id = ?
                 """;
 
         try(
@@ -73,8 +74,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
                 while (resultSet.next()){
                     String categoryName = resultSet.getString(2);
                     String description = resultSet.getString(3);
-                    Category c = new Category(categoryId, categoryName, description);
-                    return c;
+                    return new Category(categoryId, categoryName, description);
                 }
             }
 
