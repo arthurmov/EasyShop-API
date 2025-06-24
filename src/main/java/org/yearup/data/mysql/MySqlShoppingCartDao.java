@@ -30,12 +30,12 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
 
         String query = """
                 SELECT
-                                  p.*,
-                                  sc.quantity,
-                                  (p.price * sc.quantity) AS total
-                                FROM shopping_cart sc
-                                JOIN products p ON sc.product_id = p.product_id
-                                WHERE sc.user_id = 3;
+                p.*,
+                sc.quantity,
+                (p.price * sc.quantity) AS total
+                FROM shopping_cart sc
+                JOIN products p ON sc.product_id = p.product_id
+                WHERE sc.user_id = ?;
                 """;
 
         try(
@@ -48,16 +48,16 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
 
                     Product product = new Product();
 
-                    product.setProductId(resultSet.getInt(2));
-                    product.setName(resultSet.getString(3));
-                    product.setPrice(resultSet.getBigDecimal(4));
-                    product.setCategoryId(resultSet.getInt(5));
-                    product.setDescription(resultSet.getString(6));
-                    product.setColor(resultSet.getString(7));
-                    product.setStock(resultSet.getInt(8));
-                    product.setImageUrl(resultSet.getString(9));
-                    product.setFeatured(resultSet.getBoolean(10));
-                    int quantity = resultSet.getInt(11);
+                    product.setProductId(resultSet.getInt("product_id"));
+                    product.setName(resultSet.getString("name"));
+                    product.setPrice(resultSet.getBigDecimal("price"));
+                    product.setCategoryId(resultSet.getInt("category_id"));
+                    product.setDescription(resultSet.getString("description"));
+                    product.setColor(resultSet.getString("color"));
+                    product.setStock(resultSet.getInt("stock"));
+                    product.setImageUrl(resultSet.getString("image_url"));
+                    product.setFeatured(resultSet.getBoolean("featured"));
+                    int quantity = resultSet.getInt("quantity");
 
                     ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
                     shoppingCartItem.setProduct(product);
@@ -73,9 +73,9 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
     }
 
     @Override
-    public ShoppingCartItem create(Product product) {
+    public ShoppingCartItem create(int userId, Product product) {
         return null;
-    }
+}
 
     @Override
     public void update(int userId, Product product) {

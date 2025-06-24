@@ -26,9 +26,13 @@ public class ShoppingCartController
     private UserDao userDao;
     private ProductDao productDao;
 
+    public ShoppingCartController(ShoppingCartDao shoppingCartDao, UserDao userDao, ProductDao productDao) {
+        this.shoppingCartDao = shoppingCartDao;
+        this.userDao = userDao;
+        this.productDao = productDao;
+    }
 
     @GetMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     // each method in this controller requires a Principal object as a parameter
     public ShoppingCart getCart(Principal principal)
     {
@@ -45,6 +49,7 @@ public class ShoppingCartController
         }
         catch(Exception e)
         {
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }
@@ -52,7 +57,6 @@ public class ShoppingCartController
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added
     @PostMapping("products/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ShoppingCartItem addProductToCart(@RequestBody Product product, Principal principal) {
 
         try
@@ -63,7 +67,7 @@ public class ShoppingCartController
             User user = userDao.getByUserName(userName);
             int userId = user.getId();
 
-            return shoppingCartDao.create(product);
+            return shoppingCartDao.create(userId, product);
         }
         catch(Exception ex)
         {
@@ -76,7 +80,6 @@ public class ShoppingCartController
     // https://localhost:8080/cart/products/15 (15 is the productId to be updated)
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated
     @PutMapping("products/{id}")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void updateShoppingCart(@PathVariable Product product, Principal principal){
     // update the shopping cart by id
     try
@@ -99,7 +102,6 @@ public class ShoppingCartController
     // add a DELETE method to clear all products from the current users cart
     // https://localhost:8080/cart
     @DeleteMapping
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteShoppingCart(Principal principal)
     {
         // delete the shopping cart by user id
