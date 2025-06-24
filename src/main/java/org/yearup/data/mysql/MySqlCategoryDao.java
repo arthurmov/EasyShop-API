@@ -93,7 +93,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
                 insert into categories
                 (category_id, name, description)
                 values
-                (1, ?, ?)""";
+                (?, ?, ?)""";
 
         try(
                 Connection connection = getConnection();
@@ -126,7 +126,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
     public void update(int categoryId, Category category)
     {
         // update category
-        String sql = """
+        String query = """
                 UPDATE categories
                 SET name = ?
                   , description = ?
@@ -135,7 +135,7 @@ public class MySqlCategoryDao extends MySqlDaoBase implements CategoryDao
 
         try (Connection connection = getConnection())
         {
-            PreparedStatement ps = connection.prepareStatement(sql);
+            PreparedStatement ps = connection.prepareStatement(query);
             ps.setInt(1, category.getCategoryId());
             ps.setString(2, category.getName());
             ps.setString(3, category.getDescription());

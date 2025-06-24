@@ -57,7 +57,7 @@ public class ShoppingCartController
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added
     @PostMapping("products/{id}")
-    public ShoppingCartItem addProductToCart(@RequestBody Product product, Principal principal) {
+    public ShoppingCartItem addProductToCart(@RequestBody ShoppingCartItem shoppingCartItem, Principal principal) {
 
         try
         {
@@ -67,7 +67,7 @@ public class ShoppingCartController
             User user = userDao.getByUserName(userName);
             int userId = user.getId();
 
-            return shoppingCartDao.create(userId, product);
+            return shoppingCartDao.create(userId, shoppingCartItem);
         }
         catch(Exception ex)
         {
@@ -80,7 +80,7 @@ public class ShoppingCartController
     // https://localhost:8080/cart/products/15 (15 is the productId to be updated)
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated
     @PutMapping("products/{id}")
-    public void updateShoppingCart(@PathVariable Product product, Principal principal){
+    public void updateShoppingCart(@PathVariable ShoppingCartItem shoppingCartItem, Principal principal){
     // update the shopping cart by id
     try
     {
@@ -90,7 +90,7 @@ public class ShoppingCartController
         User user = userDao.getByUserName(userName);
         int userId = user.getId();
 
-        shoppingCartDao.update(userId, product);
+        shoppingCartDao.update(userId, shoppingCartItem);
     }
     catch(Exception ex)
     {
