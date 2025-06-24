@@ -94,8 +94,8 @@ public class ShoppingCartController
     // add a PUT method to update an existing product in the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be updated)
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated
-    @PutMapping("products/{id}")
-    public void updateShoppingCart(@PathVariable ShoppingCartItem shoppingCartItem, Principal principal){
+    @PutMapping("products/{productId}")
+    public void updateShoppingCart(@PathVariable int productId, @RequestBody int quantity, Principal principal){
     // update the shopping cart by id
     try
     {
@@ -105,10 +105,18 @@ public class ShoppingCartController
         User user = userDao.getByUserName(userName);
         int userId = user.getId();
 
+        Product product = productDao.getById(productId);
+        ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
+        shoppingCartItem.setProduct(product);
+        shoppingCartItem.setQuantity(quantity);
+
+        // current format is just number, for json body format i need dto?
+
         shoppingCartDao.update(userId, shoppingCartItem);
     }
     catch(Exception ex)
     {
+        ex.printStackTrace();
         throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
         }
     }

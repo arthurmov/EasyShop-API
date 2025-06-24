@@ -104,7 +104,7 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         // to do
         String query = """
                 update shopping_cart
-                " SET quantity = ?
+                SET quantity = ?
                 where user_id = ?
                 AND product_id = ?
                 """;
@@ -114,9 +114,9 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         )
         {
 
-            int newQuantity = shoppingCartItem.getQuantity();
+            int quantity = shoppingCartItem.getQuantity();
             int productId   = shoppingCartItem.getProductId();
-            ps.setInt(1, newQuantity);
+            ps.setInt(1, quantity);
             ps.setInt(2, userId);
             ps.setInt(3, productId);
             ps.executeUpdate();
