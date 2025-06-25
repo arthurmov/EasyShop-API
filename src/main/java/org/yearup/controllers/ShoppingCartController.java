@@ -57,7 +57,8 @@ public class ShoppingCartController
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added
     @PostMapping("products/{productId}")
-    public ShoppingCartItem addProductToCart(@PathVariable int productId, Principal principal) {
+    @ResponseStatus(value = HttpStatus.CREATED)
+    public ShoppingCart addProductToCart(@PathVariable int productId, Principal principal) {
 
         try
         {
@@ -74,15 +75,17 @@ public class ShoppingCartController
                 ShoppingCartItem shoppingCartItem = shoppingCart.get(productId);
                 shoppingCartItem.setQuantity(shoppingCartItem.getQuantity() + 1);
                 shoppingCartDao.update(userId, shoppingCartItem);
-                return shoppingCartItem;
+              //  return shoppingCartItem;
 
             } else {
                 Product product = productDao.getById(productId);
                 ShoppingCartItem shoppingCartItem = new ShoppingCartItem();
                 shoppingCartItem.setProduct(product);
-                return shoppingCartDao.create(userId, shoppingCartItem);
+              //  return
+                  shoppingCartDao.create(userId, shoppingCartItem);
 
             }
+            return shoppingCartDao.getByUserId(userId);
         }
         catch(Exception ex)
         {
@@ -125,7 +128,7 @@ public class ShoppingCartController
     // add a DELETE method to clear all products from the current users cart
     // https://localhost:8080/cart
     @DeleteMapping
-    public void deleteShoppingCart(Principal principal)
+    public ShoppingCart deleteShoppingCart(Principal principal)
     {
         // delete the shopping cart by user id
         try
@@ -142,6 +145,8 @@ public class ShoppingCartController
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
             shoppingCartDao.delete(userId);
+            
+            return shoppingCartDao.getByUserId(userId);
         }
         catch(Exception ex)
         {
