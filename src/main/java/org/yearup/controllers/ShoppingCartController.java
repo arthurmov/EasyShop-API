@@ -145,12 +145,12 @@ public class ShoppingCartController
                 throw new ResponseStatusException(HttpStatus.NOT_FOUND);
 
             shoppingCartDao.delete(userId);
-            
+
             return shoppingCartDao.getByUserId(userId);
         }
         catch(Exception ex)
         {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Oops... our bad.");
+            }
         }
-    }
     }

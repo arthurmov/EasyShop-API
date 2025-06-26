@@ -66,8 +66,6 @@ public class MySqlShoppingCartDao extends MySqlDaoBase implements ShoppingCartDa
         String query = """
                 INSERT INTO shopping_cart (user_id, product_id)
                 VALUES (?, ?)
-                AS new
-                ON DUPLICATE KEY UPDATE quantity = shopping_cart.quantity + 1
                 """;
 
         try(
