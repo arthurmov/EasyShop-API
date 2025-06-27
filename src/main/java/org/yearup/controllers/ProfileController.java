@@ -1,11 +1,10 @@
 package org.yearup.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yearup.data.ProfileDao;
 import org.yearup.data.UserDao;
 import org.yearup.models.Profile;
-import org.yearup.models.User;
 
 import java.security.Principal;
 
@@ -16,18 +15,25 @@ public class ProfileController {
     private UserDao userDao;
 
     @GetMapping
-    public Profile getById(Principal principal)
-    {
+    public ResponseEntity<Profile> getProfile(Principal principal) {
         String username = principal.getName();
-        User user = userDao.getByUserName(username);
-        int userId = user.getId();
-
-        return profileDao.getByUserId(userId);
+        int userId = userDao.getIdByUsername(username);
+        return ResponseEntity.ok(profileDao.getByUserId(userId));
     }
 
     @PutMapping
-    public void updateProfile(@RequestBody Profile profile, Principal principal)
-    {
-        profileDao.update(profile.getUserId(), profile);
+    public ResponseEntity<Profile> editProfile(@RequestBody Profile profile, Principal principal) {
+        String username = principal.getName();
+        int userId = userDao.getIdByUsername(username);
+        profile.setUserId(userId);
+
+        // Call the DAO's update method (returns void)
+        profileDao.update(userId, profile);
+
+        // Fetch the updated profile
+        Profile updatedProfile = profileDao.getByUserId(userId);
+
+        return ResponseEntity.ok(updatedProfile);
     }
+
 }

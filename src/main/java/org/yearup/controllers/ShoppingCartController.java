@@ -33,6 +33,7 @@ public class ShoppingCartController
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     // each method in this controller requires a Principal object as a parameter
     public ShoppingCart getCart(Principal principal)
     {
@@ -57,6 +58,7 @@ public class ShoppingCartController
     // add a POST method to add a product to the cart - the url should be
     // https://localhost:8080/cart/products/15 (15 is the productId to be added
     @PostMapping("products/{productId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     @ResponseStatus(value = HttpStatus.CREATED)
     public ShoppingCart addProductToCart(@PathVariable int productId, Principal principal) {
 
@@ -98,6 +100,7 @@ public class ShoppingCartController
     // https://localhost:8080/cart/products/15 (15 is the productId to be updated)
     // the BODY should be a ShoppingCartItem - quantity is the only value that will be updated
     @PutMapping("products/{productId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public void updateShoppingCart(@PathVariable int productId, @RequestBody int quantity, Principal principal){
     // update the shopping cart by id
     try
@@ -128,6 +131,7 @@ public class ShoppingCartController
     // add a DELETE method to clear all products from the current users cart
     // https://localhost:8080/cart
     @DeleteMapping
+    @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ShoppingCart deleteShoppingCart(Principal principal)
     {
         // delete the shopping cart by user id
