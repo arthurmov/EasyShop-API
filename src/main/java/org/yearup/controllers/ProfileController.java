@@ -1,5 +1,6 @@
 package org.yearup.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.yearup.data.ProfileDao;
@@ -10,9 +11,16 @@ import java.security.Principal;
 
 @RestController
 @RequestMapping("/profile")
+@CrossOrigin
 public class ProfileController {
     private ProfileDao profileDao;
     private UserDao userDao;
+
+    @Autowired
+    public ProfileController(ProfileDao profileDao, UserDao userDao) {
+        this.profileDao = profileDao;
+        this.userDao = userDao;
+    }
 
     @GetMapping
     public ResponseEntity<Profile> getProfile(Principal principal) {
@@ -22,7 +30,7 @@ public class ProfileController {
     }
 
     @PutMapping
-    public ResponseEntity<Profile> editProfile(@RequestBody Profile profile, Principal principal) {
+    public ResponseEntity<Profile> updateProfile(@RequestBody Profile profile, Principal principal) {
         String username = principal.getName();
         int userId = userDao.getIdByUsername(username);
         profile.setUserId(userId);
