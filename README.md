@@ -160,8 +160,6 @@ Categories were implemented as part of this project to support product browsing 
     DELETE /categories/{id}
     ```
 
-All category endpoints require admin authorization.
-
 ## 🛒 Shopping Cart Endpoints
 
 Implemented as part of this capstone project. Only available to logged-in users.
